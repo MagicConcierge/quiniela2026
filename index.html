@@ -457,15 +457,21 @@ const DATE_MAP = {
 };
 
 // Grace: Jun 11-13 open until midnight MX Jun 14
-const GRACE_UNTIL = new Date(Date.UTC(2026,5,14,6,0,0));
-const GRACE_DATES = ["Jun 11","Jun 12","Jun 13"];
+// Grace period extended: first 5 days open for late entries
+// Jun 11-15 open until midnight MX Jun 16 (= UTC Jun 16 06:00)
+const GRACE_UNTIL = new Date(Date.UTC(2026,5,16,6,0,0));
+const GRACE_DATES = ["Jun 11","Jun 12","Jun 13","Jun 14","Jun 15"];
 
 function matchStarted(match) {
-  if (!match || !match.f || match.utcH === undefined) return false;
+  if (!match || !match.f || !match.mx) return false;
   const now = new Date();
   if (GRACE_DATES.includes(match.f) && now < GRACE_UNTIL) return false;
-  // Use pre-computed UTC time (handles day rollover correctly)
-  const kickoff = new Date(Date.UTC(2026, match.utcMonth, match.utcDay, match.utcH, match.utcM||0, 0));
+  const d = DATE_MAP[match.f];
+  if (!d) return false;
+  const [h, m] = match.mx.split(':').map(Number);
+  // Build kickoff as MX local time (UTC-6): add 6h to get UTC
+  // Use Date constructor with explicit values — JS handles overflow automatically
+  const kickoff = new Date(Date.UTC(2026, d[0], d[1], h + 6, m, 0));
   return now >= kickoff;
 }
 
