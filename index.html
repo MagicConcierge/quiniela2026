@@ -591,15 +591,14 @@ function getPhPts(ph) {
 
 // ── MATCH CARD ────────────────────────────────────────────────────────────────
 function buildResBtns(phId,mi,real,lo,vi) {
+  // Admins (Papá/Mamá) can ALWAYS set results, even after match started
   const admin=canResult(), tog=v=>real===v?'':v;
-  const ro=admin?'':'readonly';
   const b=(val,content,cls)=>admin
     ?`<button class="res-btn ${real===val?cls:''}" onclick="setReal('${phId}',${mi},'${tog(val)}')">${content}</button>`
     :`<div class="res-btn ${real===val?cls:''} readonly">${content}</div>`;
-  const ex=admin
-    ?`onclick="setReal('${phId}',${mi},'${tog('X')}')"`:'' ;
+  const ex=admin?`onclick="setReal('${phId}',${mi},'${tog('X')}')"`:'' ;
   return `${b('1',`${F(lo)} Gana`,'active-1')}
-    <button class="res-btn-empate ${real==='X'?'active-X':''} ${ro}" ${ex}>🤝<br>Empate</button>
+    <button class="res-btn-empate ${real==='X'?'active-X':''} ${admin?'':'readonly'}" ${ex}>🤝<br>Empate</button>
     ${b('2',`${F(vi)} Gana`,'active-2')}`;
 }
 
@@ -642,7 +641,8 @@ function matchCardHtml(phId,match,mi) {
     <div class="result-row">${buildResBtns(phId,mi,real,lo,vi)}</div>
     <div class="preds-area">
       <div class="preds-title">⭐ Pronósticos de la familia</div>
-      ${started?'<div class="lock-notice">🔒 Partido iniciado · ya no se puede cambiar el pronóstico</div>':''}
+      ${started && canResult() ? '<div class="lock-notice" style="color:var(--green2)">✅ Ya inició · puedes registrar el resultado arriba</div>' : ''}
+      ${started && !canResult() ? '<div class="lock-notice">🔒 Partido iniciado · ya no se puede cambiar el pronóstico</div>' : ''}
       <div class="preds-grid">${predsHtml(phId,mi,real,preds,lo,vi,match)}</div>
     </div>
   </div>`;
