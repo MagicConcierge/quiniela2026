@@ -519,8 +519,8 @@ const GRUPOS = [
   mk("México","Corea del Sur","Jun 18","19:00","A"),
   mk("EE.UU.","Australia","Jun 19","13:00","D"),
   mk("Escocia","Marruecos","Jun 19","16:00","C"),
-  mk("Brasil","Haití","Jun 19","18:30","C"),
-  mk("Turquía","Paraguay","Jun 19","21:00","D"),
+  mk("Brasil","Haití","Jun 19","19:00","C"),
+  mk("Turquía","Paraguay","Jun 19","22:00","D"),
   mk("P. Bajos","Suecia","Jun 20","11:00","F"),
   mk("Alemania","C. de Marfil","Jun 20","14:00","E"),
   mk("Ecuador","Curazao","Jun 20","20:00","E"),
@@ -539,28 +539,28 @@ const GRUPOS = [
   mk("Colombia","RD Congo","Jun 23","20:00","K"),
   mk("Suiza","Canadá","Jun 24","13:00","B"),
   mk("Bosnia-Herz.","Qatar","Jun 24","13:00","B"),
+  mk("Escocia","Brasil","Jun 24","16:00","C"),
+  mk("Marruecos","Haití","Jun 24","16:00","C"),
+  mk("R. Checa","México","Jun 24","19:00","A"),
   mk("Sudáfrica","Corea del Sur","Jun 24","19:00","A"),
-  mk("México","R. Checa","Jun 24","19:00","A"),
-  mk("Marruecos","Brasil","Jun 25","13:00","C"),
-  mk("Escocia","Haití","Jun 25","13:00","C"),
-  mk("Paraguay","EE.UU.","Jun 25","19:00","D"),
-  mk("Turquía","Australia","Jun 25","19:00","D"),
-  mk("Japón","P. Bajos","Jun 26","13:00","F"),
-  mk("Túnez","Suecia","Jun 26","13:00","F"),
-  mk("Curazao","Alemania","Jun 26","19:00","E"),
-  mk("Ecuador","C. de Marfil","Jun 26","19:00","E"),
-  mk("Egipto","Bélgica","Jun 27","13:00","G"),
-  mk("N. Zelanda","Irán","Jun 27","13:00","G"),
-  mk("Cabo Verde","España","Jun 27","19:00","H"),
-  mk("Uruguay","Arabia S.","Jun 27","19:00","H"),
-  mk("Senegal","Francia","Jun 27","13:00","I"),
-  mk("Noruega","Irak","Jun 27","13:00","I"),
-  mk("Argelia","Argentina","Jun 27","19:00","J"),
-  mk("Jordania","Austria","Jun 27","19:00","J"),
-  mk("RD Congo","Portugal","Jun 27","13:00","K"),
-  mk("Colombia","Uzbekistán","Jun 27","13:00","K"),
-  mk("Croacia","Inglaterra","Jun 27","19:00","L"),
-  mk("Panamá","Ghana","Jun 27","19:00","L"),
+  mk("Ecuador","Alemania","Jun 25","14:00","E"),
+  mk("Curazao","C. de Marfil","Jun 25","14:00","E"),
+  mk("Japón","Suecia","Jun 25","17:00","F"),
+  mk("Túnez","P. Bajos","Jun 25","17:00","F"),
+  mk("Turquía","EE.UU.","Jun 25","20:00","D"),
+  mk("Paraguay","Australia","Jun 25","20:00","D"),
+  mk("Noruega","Francia","Jun 26","13:00","I"),
+  mk("Senegal","Irak","Jun 26","13:00","I"),
+  mk("Uruguay","España","Jun 26","17:00","H"),
+  mk("Cabo Verde","Arabia S.","Jun 26","17:00","H"),
+  mk("Egipto","Irán","Jun 26","20:00","G"),
+  mk("N. Zelanda","Bélgica","Jun 26","20:00","G"),
+  mk("Croacia","Ghana","Jun 27","11:00","L"),
+  mk("Panamá","Inglaterra","Jun 27","11:00","L"),
+  mk("RD Congo","Uzbekistán","Jun 27","15:00","K"),
+  mk("Colombia","Portugal","Jun 27","15:00","K"),
+  mk("Argelia","Austria","Jun 27","19:00","J"),
+  mk("Jordania","Argentina","Jun 27","19:00","J")
 ];
 
 const R16=[
@@ -597,6 +597,79 @@ const getMX = () => {
 const getMData  = (phId,mi) => (dbState[phId]?.[mi]) || {real:"",preds:{}};
 const canResult = () => RESULT_ADMINS.includes(me);
 const canActAs  = n => n===me || (PROXY[me]||[]).includes(n);
+
+// ── RESULTADOS OFICIALES (actualizado manualmente por Claude con info pública) ──
+const OFFICIAL_RESULTS = {
+  "México|Sudáfrica": "1",
+  "Corea del Sur|R. Checa": "1",
+  "Canadá|Bosnia-Herz.": "X",
+  "EE.UU.|Paraguay": "1",
+  "Qatar|Suiza": "X",
+  "Brasil|Marruecos": "X",
+  "Haití|Escocia": "2",
+  "Australia|Turquía": "1",
+  "Alemania|Curazao": "1",
+  "P. Bajos|Japón": "X",
+  "C. de Marfil|Ecuador": "1",
+  "Suecia|Túnez": "1",
+  "España|Cabo Verde": "X",
+  "Bélgica|Egipto": "X",
+  "Arabia S.|Uruguay": "X",
+  "Irán|N. Zelanda": "X",
+  "Francia|Senegal": "1",
+  "Irak|Noruega": "2",
+  "Argentina|Argelia": "1",
+  "Austria|Jordania": "1",
+  "Portugal|RD Congo": "X",
+  "Inglaterra|Croacia": "1",
+  "Ghana|Panamá": "1",
+  "Uzbekistán|Colombia": "2",
+  "R. Checa|Sudáfrica": "X",
+  "Suiza|Bosnia-Herz.": "1",
+  "Canadá|Qatar": "1",
+  "México|Corea del Sur": "1",
+  "EE.UU.|Australia": "1",
+  "Escocia|Marruecos": "2",
+  "Brasil|Haití": "1",
+  "Turquía|Paraguay": "2",
+  "P. Bajos|Suecia": "1",
+  "Alemania|C. de Marfil": "1",
+  "Ecuador|Curazao": "X",
+  "Túnez|Japón": "2",
+  "España|Arabia S.": "1",
+  "Bélgica|Irán": "X",
+  "Uruguay|Cabo Verde": "X",
+  "N. Zelanda|Egipto": "2",
+  "Argentina|Austria": "1",
+  "Francia|Irak": "1",
+  "Noruega|Senegal": "1",
+  "Jordania|Argelia": "2",
+  "Portugal|Uzbekistán": "1",
+  "Inglaterra|Ghana": "X",
+  "Panamá|Croacia": "2",
+  "Colombia|RD Congo": "1"
+};
+
+window.autoFillResults = async () => {
+  if (!canResult()) return;
+  const btn = document.getElementById("autofill-btn");
+  if (btn) { btn.disabled = true; btn.textContent = "⏳ Actualizando..."; }
+  let updated = 0, alreadySet = 0, notFound = 0;
+  for (const ph of PHASES) {
+    for (let mi = 0; mi < ph.matches.length; mi++) {
+      const m = ph.matches[mi];
+      const key = `${m.l}|${m.v}`;
+      const official = OFFICIAL_RESULTS[key];
+      if (!official) { notFound++; continue; }
+      const current = getMData(ph.id, mi).real;
+      if (current === official) { alreadySet++; continue; }
+      await db.ref(`quiniela/${ph.id}/${mi}/real`).set(official);
+      updated++;
+    }
+  }
+  if (btn) { btn.disabled = false; btn.textContent = "🔄 Actualizar resultados oficiales"; }
+  showToast(`✅ ${updated} actualizado(s) · ${alreadySet} ya estaban bien · ${notFound} aún sin jugar`);
+};
 
 function getAllPts() {
   return MEMBERS.map((_,i) => PHASES.reduce((acc,ph) =>
@@ -747,7 +820,10 @@ function renderHoy() {
 
   todayM.forEach(({ph,m,i})=>{html+=matchCardHtml(ph.id,m,i);});
   const copyBtnHtml=`<button class="copy-msg-btn" id="copy-wa-btn" onclick="copyBraBoMsg()">📋 Copiar mensaje de hoy para WhatsApp</button>`;
-  panel.innerHTML=copyBtnHtml+html;
+  const adminBtnHtml=canResult()
+    ? `<button class="copy-msg-btn" id="autofill-btn" onclick="autoFillResults()" style="border-color:#27ae60;color:#1e8449;background:rgba(39,174,96,0.08);">🔄 Actualizar resultados oficiales</button>`
+    : '';
+  panel.innerHTML=copyBtnHtml+adminBtnHtml+html;
   todayMatchesGlobal=todayM;
   if(lastAIDate!==today){lastAIDate=today;loadAI(todayM,today);}
 }
@@ -915,7 +991,7 @@ function setSyncStatus(s) {
 
 // ── ACTIONS ───────────────────────────────────────────────────────────────────
 function generateBraBoMsg(matches, today) {
-  const link="https://MagicConcierge.github.io/quiniela-paraiso";
+  const link="https://MagicConcierge.github.io/quiniela-brabo";
   const lines=matches.map(({m})=>{
     const lo=FLAGS[m.l]||"🏳️",vi=FLAGS[m.v]||"🏳️";
     return `${lo} ${m.l} vs ${m.v} ${vi}\n⏰ ${m.mx||""} hora MX`;
@@ -993,7 +1069,9 @@ function doLogin() {
   me=sel.dataset.name;
   localStorage.setItem("qb_user",me);
   document.getElementById("login-screen").style.display="none";
+  document.getElementById("loading").style.display="flex";
   document.getElementById("user-badge").textContent=me;
+  firstLoad=true; // reset so revealApp works
   buildTabs();
   subscribeDb();
 }
@@ -1046,15 +1124,17 @@ function showToast(msg) {
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 buildLogin();
-document.getElementById("loading").style.display="none";
 const saved=localStorage.getItem("qb_user");
 if(saved&&MEMBERS.includes(saved)){
   me=saved;
   document.getElementById("login-screen").style.display="none";
+  document.getElementById("loading").style.display="flex";
   document.getElementById("user-badge").textContent=me;
+  firstLoad=true;
   buildTabs();
   subscribeDb();
 }else{
+  document.getElementById("loading").style.display="none";
   document.getElementById("login-screen").style.display="flex";
 }
 </script>
